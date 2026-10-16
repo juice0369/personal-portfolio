@@ -65,6 +65,7 @@
 ├─ .prettierignore                # 格式化范围排除构建产物与锁文件
 ├─ .nvmrc
 ├─ .gitignore
+├─ .gitattributes                 # 统一文本换行为 LF（与 Prettier 的 endOfLine: "lf" 一致）
 ├─ public/                        # 原样拷贝到产物根目录
 │  ├─ _redirects                  # 说明 Cloudflare Pages 的默认 SPA 深链行为（不声明规则）
 │  ├─ _headers                    # 安全响应头
