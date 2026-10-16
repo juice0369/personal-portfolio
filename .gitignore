@@ -1,0 +1,35 @@
+node_modules
+dist
+dist-ssr
+coverage
+.vite
+*.tsbuildinfo
+*.local
+
+.env
+.env.*
+!.env.example
+
+# 日志与临时文件
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tmp
+*.temp
+*.bak
+*.orig
+tmp/
+temp/
+.cache/
+.wrangler/
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 编辑器与工具
+.vscode/*
+!.vscode/extensions.json
+.idea
+.cursor/
