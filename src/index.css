@@ -1,0 +1,267 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   设计令牌（TECH_DESIGN §9.1）
+   色值、圆角、阴影、字体在此集中定义，组件中只使用令牌生成的工具类。
+   ========================================================================== */
+@theme {
+  --color-ink-900: #0b0b0d;
+  --color-ink-800: #121216;
+  --color-ink-700: #1f1f25;
+  --color-ink-600: #6b6459;
+  --color-parchment-100: #f5f1e8;
+  --color-parchment-300: #d8d2c4;
+  --color-parchment-500: #a9a29a;
+  --color-champagne-200: #e3c88f;
+  --color-champagne-400: #c9a96a;
+  --color-danger-400: #e07a6b;
+
+  --font-sans:
+    ui-sans-serif, system-ui, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    sans-serif;
+
+  --radius-card: 14px;
+  --radius-control: 10px;
+  --shadow-panel: 0 1px 0 0 rgb(255 255 255 / 0.03), 0 16px 40px -20px rgb(0 0 0 / 0.7);
+}
+
+/* 统一焦点环：所有可交互元素使用香槟金 2px + 外偏移（对比度约 9.5:1） */
+@utility focus-ring {
+  outline: 2px solid var(--color-champagne-400);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   基础样式
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  /* 吸顶导航会遮住滚动目标；scroll-padding 保证锚点与被聚焦元素都不被遮挡
+     （WCAG 2.2「焦点不被遮挡」的最低要求） */
+  scroll-padding-top: 5.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-ink-900);
+  color: var(--color-parchment-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-champagne-400);
+  color: var(--color-ink-900);
+}
+
+/* 默认焦点可见性兜底：未被组件覆盖的元素也有可见焦点环 */
+:focus-visible {
+  outline: 2px solid var(--color-champagne-400);
+  outline-offset: 2px;
+}
+
+/* 锚点滚动时避开吸顶导航高度 */
+[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* 滚动条与背景保持一致，避免出现亮色滚动条破坏深色观感 */
+* {
+  scrollbar-color: var(--color-ink-700) transparent;
+}
+
+/* ==========================================================================
+   星空背景（纯 CSS，无动画循环，尊重 prefers-reduced-motion）
+   正文与表单始终位于不透明面板之上，因此星光不会影响文字对比度。
+   ========================================================================== */
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.starfield-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+  background:
+    radial-gradient(60% 42% at 12% 0%, rgb(201 169 106 / 0.1), transparent 70%),
+    radial-gradient(50% 36% at 88% 8%, rgb(201 169 106 / 0.06), transparent 72%);
+}
+
+.starfield-dots {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(circle at 12% 22%, rgb(245 241 232 / 0.55) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 68% 12%, rgb(227 200 143 / 0.45) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 32% 68%, rgb(245 241 232 / 0.4) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 84% 54%, rgb(245 241 232 / 0.35) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 48% 86%, rgb(227 200 143 / 0.35) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 92% 82%, rgb(245 241 232 / 0.3) 0 1px, transparent 1.6px);
+  background-size:
+    340px 340px,
+    520px 520px,
+    430px 430px,
+    610px 610px,
+    380px 380px,
+    700px 700px;
+  background-repeat: repeat;
+}
+
+/* 仅在允许动效时才做极慢的透明度呼吸（单个元素、opacity，无位移） */
+@media (prefers-reduced-motion: no-preference) {
+  .starfield-glow {
+    animation: starfield-breathe 26s ease-in-out infinite;
+  }
+}
+
+@keyframes starfield-breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 移动端只保留一层渐变，不渲染星点层，避免影响滚动手感 */
+@media (max-width: 639px) {
+  .starfield-dots {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Markdown 正文排版
+   ========================================================================== */
+.markdown-body {
+  line-height: 1.8;
+  color: var(--color-parchment-100);
+  overflow-wrap: anywhere;
+}
+
+.markdown-body > * + * {
+  margin-top: 1rem;
+}
+
+.markdown-body h2 {
+  margin-top: 2rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-parchment-100);
+}
+
+.markdown-body h3 {
+  margin-top: 1.5rem;
+  font-size: 1.075rem;
+  font-weight: 600;
+  color: var(--color-parchment-100);
+}
+
+.markdown-body p,
+.markdown-body li {
+  color: var(--color-parchment-300);
+}
+
+.markdown-body a {
+  color: var(--color-champagne-400);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.markdown-body a:hover {
+  color: var(--color-champagne-200);
+}
+
+.markdown-body strong {
+  color: var(--color-parchment-100);
+  font-weight: 600;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.35rem;
+}
+
+.markdown-body ul {
+  list-style: disc;
+}
+
+.markdown-body ol {
+  list-style: decimal;
+}
+
+.markdown-body li + li {
+  margin-top: 0.35rem;
+}
+
+.markdown-body blockquote {
+  border-left: 2px solid var(--color-champagne-400);
+  padding-left: 1rem;
+  color: var(--color-parchment-500);
+}
+
+.markdown-body code {
+  border-radius: 6px;
+  background-color: var(--color-ink-700);
+  padding: 0.15rem 0.35rem;
+  font-size: 0.875em;
+  color: var(--color-champagne-200);
+}
+
+.markdown-body pre {
+  overflow-x: auto;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--color-ink-700);
+  background-color: var(--color-ink-900);
+  padding: 1rem;
+}
+
+.markdown-body pre code {
+  background-color: transparent;
+  padding: 0;
+  color: var(--color-parchment-100);
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--color-ink-700);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  color: var(--color-parchment-300);
+}
+
+.markdown-body th {
+  background-color: var(--color-ink-800);
+  color: var(--color-parchment-100);
+}
+
+.markdown-body hr {
+  border: 0;
+  border-top: 1px solid var(--color-ink-700);
+}
+
+.markdown-body img {
+  max-width: 100%;
+  border-radius: var(--radius-control);
+}
