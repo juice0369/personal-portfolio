@@ -1,0 +1,9 @@
+# Cloudflare Pages 的 SPA 深链不需要在这里声明规则。
+#
+# 项目不含顶层 404.html 时，Pages 会把所有未匹配到静态文件的路径交给根路径渲染，
+# 由前端路由接管（官方说明：https://developers.cloudflare.com/pages/configuration/serving-pages/
+# 的 "Single-page application (SPA) rendering" 一节）。
+#
+# 原先写的 `/*  /index.html  200` 已被 Wrangler 判定为无效规则
+# （Infinite loop detected ... has been ignored）并忽略，为避免误导故移除。
+# 验证方式与结论见 TECH_DESIGN.md §12.2 与 §12.4。

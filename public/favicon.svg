@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="站点图标">
+  <rect width="32" height="32" rx="7" fill="#0B0B0D" />
+  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="6.25" fill="none" stroke="#1F1F25" stroke-width="1.5" />
+  <path
+    d="M16 5.5l2.5 7.1 7.5 2.4-7.5 2.4L16 24.5l-2.5-7.1L6 15l7.5-2.4z"
+    fill="#C9A96A"
+  />
+</svg>
